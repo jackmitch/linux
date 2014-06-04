@@ -34,5 +34,13 @@ config IMX_VIDEO_SWITCH
 	  multiplexer controlled by register bitfields as well as
 	  external multiplexers controller by a GPIO.
 
+config IMX_OV5640_MIPI
+       tristate "OmniVision OV5640 MIPI CSI-2 camera support"
+       depends on GPIOLIB && VIDEO_IMX_CAMERA
+       select IMX_MIPI_CSI2
+       default y
+       ---help---
+         MIPI CSI-2 OV5640 Camera support.
+
 endmenu
 endif
