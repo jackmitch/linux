@@ -42,5 +42,12 @@ config IMX_OV5640_MIPI
        ---help---
          MIPI CSI-2 OV5640 Camera support.
 
+config IMX_OV5642
+       tristate "OmniVision OV5642 Parallel camera support"
+       depends on GPIOLIB && VIDEO_IMX_CAMERA
+       default y
+       ---help---
+         Parallel interface OV5642 camera support.
+
 endmenu
 endif
