@@ -71,6 +71,31 @@ Optional properties:
                   in order: 100 and 101;
 
 
+video mux node
+--------------
+
+This is the device node for the video bus multiplexer. It can control
+either the i.mx internal video mux that selects between parallel image
+sensors and MIPI CSI-2 virtual channels, or an external mux controlled
+by a GPIO.
+
+Required properties:
+- compatible	: "imx-video-mux";
+- port		: at least 2 port endpoints must be specified that
+  		  define the inputs to the video mux, and there must
+		  be exactly one output endpoint which must be the last
+		  port endpoint defined;
+
+Optional properties:
+- gpr		: the phandle to the GPR node for the internal mux;
+- reg		: the GPR iomuxc register offset and bitmask of the
+  		  internal mux bits. gpr and reg must be given
+		  together;
+- mux-gpios	: if reg and gpr are not specified, this must exist
+    		  to define a GPIO to control an external mux;
+
+
+
 Device tree nodes of the image sensors' controlled directly by the imx
 camera host interface driver must be child nodes of their corresponding
 I2C bus controller node. The data link of these image sensors must be
