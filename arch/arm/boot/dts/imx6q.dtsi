@@ -141,12 +141,268 @@
 			clock-names = "bus", "di0", "di1";
 			resets = <&src 4>;
 
-			ipu2_csi0: port@0 {
+			ipu2_csi0: ipu2_csi@0 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				sink-ports = <1>;
 				reg = <0>;
+
+				port@0 {
+					reg = <0>;
+					ipu2_csi0_from_mipi_vc2: endpoint {
+						remote-endpoint = <&mipi_vc2_to_ipu2_csi0>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					ipu2_csi0_to_smfc0: smfc0-endpoint {
+						remote-endpoint = <&ipu2_smfc0_from_csi0>;
+					};
+					ipu2_csi0_to_ic_prpvf: prpvf-endpoint {
+						remote-endpoint = <&ipu2_ic_prpvf_from_csi0>;
+					};
+					ipu2_csi0_to_ic_prpenc: prpenc-endpoint {
+						remote-endpoint = <&ipu2_ic_prpenc_from_csi0>;
+					};
+				};
 			};
 
-			ipu2_csi1: port@1 {
+			ipu2_csi1: ipu2_csi@1 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				sink-ports = <1>;
 				reg = <1>;
+
+				port@0 {
+					reg = <0>;
+					ipu2_csi1_from_ipu2_csi1_mux: endpoint {
+						remote-endpoint = <&ipu2_csi1_mux_to_ipu2_csi1>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					ipu2_csi1_to_smfc1: smfc1-endpoint {
+						remote-endpoint = <&ipu2_smfc1_from_csi1>;
+					};
+					ipu2_csi1_to_ic_prpvf: prpvf-endpoint {
+						remote-endpoint = <&ipu2_ic_prpvf_from_csi1>;
+					};
+					ipu2_csi1_to_ic_prpenc: prpenc-endpoint {
+						remote-endpoint = <&ipu2_ic_prpenc_from_csi1>;
+					};
+				};
+			};
+
+			ipu2_smfc0: ipu2_smfc@0 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				sink-ports = <1>;
+				reg = <0>;
+
+				port@0 {
+					reg = <0>;
+					ipu2_smfc0_from_csi0: endpoint {
+						remote-endpoint = <&ipu2_csi0_to_smfc0>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					ipu2_smfc0_to_ic_pp1: pp-endpoint {
+						remote-endpoint = <&ipu2_ic_pp1_from_smfc0>;
+					};
+					ipu2_smfc0_to_ic_prpvf: prpvf-endpoint {
+						remote-endpoint = <&ipu2_ic_prpvf_from_smfc0>;
+					};
+					ipu2_smfc0_to_camif2: camif2-endpoint {
+						remote-endpoint = <&camif2_from_smfc0>;
+					};
+					ipu2_smfc0_to_camif3: camif3-endpoint {
+						remote-endpoint = <&camif3_from_smfc0>;
+					};
+				};
+			};
+
+			ipu2_smfc1: ipu2_smfc@1 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				sink-ports = <1>;
+				reg = <1>;
+
+				port@0 {
+					reg = <0>;
+					ipu2_smfc1_from_csi1: endpoint {
+						remote-endpoint = <&ipu2_csi1_to_smfc1>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					ipu2_smfc1_to_ic_pp2: pp-endpoint {
+						remote-endpoint = <&ipu2_ic_pp2_from_smfc1>;
+					};
+					ipu2_smfc1_to_ic_prpvf: prpvf-endpoint {
+						remote-endpoint = <&ipu2_ic_prpvf_from_smfc1>;
+					};
+					ipu2_smfc1_to_camif2: camif2-endpoint {
+						remote-endpoint = <&camif2_from_smfc1>;
+					};
+					ipu2_smfc1_to_camif3: camif3-endpoint {
+						remote-endpoint = <&camif3_from_smfc1>;
+					};
+				};
+			};
+
+			ipu2_ic_prpenc: ipu2_ic_prpenc@0 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				sink-ports = <1>;
+				reg = <0>;
+
+				port@0 {
+					reg = <0>;
+					ipu2_ic_prpenc_from_csi0: csi0-endpoint {
+						remote-endpoint = <&ipu2_csi0_to_ic_prpenc>;
+					};
+					ipu2_ic_prpenc_from_csi1: csi1-endpoint {
+						remote-endpoint = <&ipu2_csi1_to_ic_prpenc>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					ipu2_ic_prpenc_to_camif2: camif2-endpoint {
+						remote-endpoint = <&camif2_from_ic_prpenc>;
+					};
+					ipu2_ic_prpenc_to_camif3: camif3-endpoint {
+						remote-endpoint = <&camif3_from_ic_prpenc>;
+					};
+				};
+			};
+
+			ipu2_ic_prpvf: ipu2_ic_prpvf@0 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				sink-ports = <1>;
+				reg = <0>;
+
+				port@0 {
+					reg = <0>;
+					ipu2_ic_prpvf_from_csi0: csi0-endpoint {
+						remote-endpoint = <&ipu2_csi0_to_ic_prpvf>;
+					};
+					ipu2_ic_prpvf_from_csi1: csi1-endpoint {
+						remote-endpoint = <&ipu2_csi1_to_ic_prpvf>;
+					};
+					ipu2_ic_prpvf_from_smfc0: smfc0-endpoint {
+						remote-endpoint = <&ipu2_smfc0_to_ic_prpvf>;
+					};
+					ipu2_ic_prpvf_from_smfc1: smfc1-endpoint {
+						remote-endpoint = <&ipu2_smfc1_to_ic_prpvf>;
+					};
+					ipu2_ic_prpvf_from_m2m1: m2m1-endpoint {
+						remote-endpoint = <&m2m1_to_ic_prpvf>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					ipu2_ic_prpvf_to_camif2: camif2-endpoint {
+						remote-endpoint = <&camif2_from_ic_prpvf>;
+					};
+					ipu2_ic_prpvf_to_camif3: camif3-endpoint {
+						remote-endpoint = <&camif3_from_ic_prpvf>;
+					};
+					ipu2_ic_prpvf_to_ic_pp0: pp0-endpoint {
+						remote-endpoint = <&ipu2_ic_pp0_from_ic_prpvf>;
+					};
+					ipu2_ic_prpvf_to_ic_pp1: pp1-endpoint {
+						remote-endpoint = <&ipu2_ic_pp1_from_ic_prpvf>;
+					};
+					ipu2_ic_prpvf_to_ic_pp2: pp2-endpoint {
+						remote-endpoint = <&ipu2_ic_pp2_from_ic_prpvf>;
+					};
+				};
+			};
+
+			ipu2_ic_pp0: ipu2_ic_pp@0 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				sink-ports = <1>;
+				reg = <0>;
+
+				port@0 {
+					reg = <0>;
+					ipu2_ic_pp0_from_m2m1: m2m1-endpoint {
+						remote-endpoint = <&m2m1_to_ic_pp0>;
+					};
+					ipu2_ic_pp0_from_ic_prpvf: prpvf-endpoint {
+						remote-endpoint = <&ipu2_ic_prpvf_to_ic_pp0>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					ipu2_ic_pp0_to_m2m1: endpoint {
+						remote-endpoint = <&m2m1_from_ic_pp0>;
+					};
+				};
+			};
+
+			ipu2_ic_pp1: ipu2_ic_pp@1 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				sink-ports = <1>;
+				reg = <1>;
+
+				port@0 {
+					reg = <0>;
+					ipu2_ic_pp1_from_smfc0: smfc0-endpoint {
+						remote-endpoint = <&ipu2_smfc0_to_ic_pp1>;
+					};
+					ipu2_ic_pp1_from_ic_prpvf: prpvf-endpoint {
+						remote-endpoint = <&ipu2_ic_prpvf_to_ic_pp1>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					ipu2_ic_pp1_to_camif2: camif2-endpoint {
+						remote-endpoint = <&camif2_from_ic_pp1>;
+					};
+					ipu2_ic_pp1_to_camif3: camif3-endpoint {
+						remote-endpoint = <&camif3_from_ic_pp1>;
+					};
+				};
+			};
+
+			ipu2_ic_pp2: ipu2_ic_pp@2 {
+				#address-cells = <1>;
+				#size-cells = <0>;
+				sink-ports = <1>;
+				reg = <2>;
+
+				port@0 {
+					reg = <0>;
+					ipu2_ic_pp2_from_smfc1: smfc1-endpoint {
+						remote-endpoint = <&ipu2_smfc1_to_ic_pp2>;
+					};
+					ipu2_ic_pp2_from_ic_prpvf: prpvf-endpoint {
+						remote-endpoint = <&ipu2_ic_prpvf_to_ic_pp2>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					ipu2_ic_pp2_to_camif2: camif2-endpoint {
+						remote-endpoint = <&camif2_from_ic_pp2>;
+					};
+					ipu2_ic_pp2_to_camif3: camif3-endpoint {
+						remote-endpoint = <&camif3_from_ic_pp2>;
+					};
+				};
 			};
 
 			ipu2_di0: port@2 {
@@ -207,6 +463,73 @@
 		compatible = "fsl,imx-gpu-subsystem";
 		cores = <&gpu_2d>, <&gpu_3d>, <&gpu_vg>;
 	};
+
+
+	ipu1_csi0_mux: ipu1_csi0_mux@4 {
+		compatible = "imx-video-mux";
+		reg = <0x04 0x80000>;
+		gpr = <&gpr>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "okay";
+		sink-ports = <2>;
+
+		port@0 {
+			reg = <0>;
+
+			ipu1_csi0_mux_from_mipi_vc0: endpoint {
+				remote-endpoint = <&mipi_vc0_to_ipu1_csi0_mux>;
+			};
+		};
+
+		port@1 {
+			reg = <1>;
+
+			ipu1_csi0_mux_from_parallel_sensor: endpoint {
+			};
+		};
+
+		port@2 {
+			reg = <2>;
+
+			ipu1_csi0_mux_to_ipu1_csi0: endpoint {
+				remote-endpoint = <&ipu1_csi0_from_ipu1_csi0_mux>;
+			};
+		};
+	};
+
+	ipu2_csi1_mux: ipu2_csi1_mux@4 {
+		compatible = "imx-video-mux";
+		reg = <0x04 0x100000>;
+		gpr = <&gpr>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "okay";
+		sink-ports = <2>;
+
+		port@0 {
+			reg = <0>;
+
+			ipu2_csi1_mux_from_mipi_vc3: endpoint {
+				remote-endpoint = <&mipi_vc3_to_ipu2_csi1_mux>;
+			};
+		};
+
+		port@1 {
+			reg = <1>;
+
+			ipu2_csi1_mux_from_parallel_sensor: endpoint {
+			};
+		};
+
+		port@2 {
+			reg = <2>;
+
+			ipu2_csi1_mux_to_ipu2_csi1: endpoint {
+				remote-endpoint = <&ipu2_csi1_from_ipu2_csi1_mux>;
+			};
+		};
+	};
 };
 
 &gpio1 {
@@ -266,6 +589,15 @@
 	};
 };
 
+&ipu1_csi1 {
+	port@0 {
+		reg = <0>;
+		ipu1_csi1_from_mipi_vc1: endpoint {
+			remote-endpoint = <&mipi_vc1_to_ipu1_csi1>;
+		};
+	};
+};
+
 &ldb {
 	clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>, <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
 		 <&clks IMX6QDL_CLK_IPU1_DI0_SEL>, <&clks IMX6QDL_CLK_IPU1_DI1_SEL>,
@@ -312,6 +644,49 @@
 	};
 };
 
+&mipi_csi {
+	sink-ports = <1>;
+
+	port@0 {
+		reg = <0>;
+
+		mipi_csi_from_mipi_sensor: endpoint {
+		};
+	};
+
+	port@1 {
+		reg = <1>;
+
+		mipi_vc0_to_ipu1_csi0_mux: endpoint {
+			remote-endpoint = <&ipu1_csi0_mux_from_mipi_vc0>;
+		};
+	};
+
+	port@2 {
+		reg = <2>;
+
+		mipi_vc1_to_ipu1_csi1: endpoint {
+			remote-endpoint = <&ipu1_csi1_from_mipi_vc1>;
+		};
+	};
+
+	port@3 {
+		reg = <3>;
+
+		mipi_vc2_to_ipu2_csi0: endpoint {
+			remote-endpoint = <&ipu2_csi0_from_mipi_vc2>;
+		};
+	};
+
+	port@4 {
+		reg = <4>;
+
+		mipi_vc3_to_ipu2_csi1_mux: endpoint {
+			remote-endpoint = <&ipu2_csi1_mux_from_mipi_vc3>;
+		};
+	};
+};
+
 &mipi_dsi {
 	ports {
 		port@2 {
@@ -334,4 +709,110 @@
 
 &vpu {
 	compatible = "fsl,imx6q-vpu", "cnm,coda960";
+};
+
+&media0 {
+	m2m1: m2m@1 {
+		compatible = "fsl,imx-media-mem2mem";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "okay";
+		sink-ports = <2>;
+		reg = <1>;
+
+		port@0 {
+			reg = <0>;
+		};
+
+		port@1 {
+			reg = <1>;
+			m2m1_from_ic_pp0: endpoint {
+				remote-endpoint = <&ipu2_ic_pp0_to_m2m1>;
+			};
+		};
+
+		port@2 {
+			reg = <2>;
+			m2m1_to_ic_prpvf: prpvf-endpoint {
+				remote-endpoint = <&ipu2_ic_prpvf_from_m2m1>;
+			};
+			m2m1_to_ic_pp0: pp0-endpoint {
+				remote-endpoint = <&ipu2_ic_pp0_from_m2m1>;
+			};
+		};
+
+		port@3 {
+			reg = <3>;
+		};
+	};
+
+	camif2: camif@2 {
+		compatible = "fsl,imx-media-camif";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "okay";
+		sink-ports = <1>;
+		reg = <2>;
+
+		port@0 {
+			reg = <0>;
+			camif2_from_smfc0: smfc0-endpoint {
+				remote-endpoint = <&ipu2_smfc0_to_camif2>;
+			};
+			camif2_from_smfc1: smfc1-endpoint {
+				remote-endpoint = <&ipu2_smfc1_to_camif2>;
+			};
+			camif2_from_ic_prpenc: prpenc-endpoint {
+				remote-endpoint = <&ipu2_ic_prpenc_to_camif2>;
+			};
+			camif2_from_ic_prpvf: prpvf-endpoint {
+				remote-endpoint = <&ipu2_ic_prpvf_to_camif2>;
+			};
+			camif2_from_ic_pp1: pp1-endpoint {
+				remote-endpoint = <&ipu2_ic_pp1_to_camif2>;
+			};
+			camif2_from_ic_pp2: pp2-endpoint {
+				remote-endpoint = <&ipu2_ic_pp2_to_camif2>;
+			};
+		};
+
+		port@1 {
+			reg = <1>;
+		};
+	};
+
+	camif3: camif@3 {
+		compatible = "fsl,imx-media-camif";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "okay";
+		sink-ports = <1>;
+		reg = <3>;
+
+		port@0 {
+			reg = <0>;
+			camif3_from_smfc0: smfc0-endpoint {
+				remote-endpoint = <&ipu2_smfc0_to_camif3>;
+			};
+			camif3_from_smfc1: smfc1-endpoint {
+				remote-endpoint = <&ipu2_smfc1_to_camif3>;
+			};
+			camif3_from_ic_prpenc: prpenc-endpoint {
+				remote-endpoint = <&ipu2_ic_prpenc_to_camif3>;
+			};
+			camif3_from_ic_prpvf: prpvf-endpoint {
+				remote-endpoint = <&ipu2_ic_prpvf_to_camif3>;
+			};
+			camif3_from_ic_pp1: pp1-endpoint {
+				remote-endpoint = <&ipu2_ic_pp1_to_camif3>;
+			};
+			camif3_from_ic_pp2: pp2-endpoint {
+				remote-endpoint = <&ipu2_ic_pp2_to_camif3>;
+			};
+		};
+
+		port@1 {
+			reg = <1>;
+		};
+	};
 };
