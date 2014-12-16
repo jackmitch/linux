@@ -49,5 +49,16 @@ config IMX_OV5642
        ---help---
          Parallel interface OV5642 camera support.
 
+config VIDEO_IMX_M2M
+	tristate "i.MX5/6 Mem2Mem driver"
+	depends on VIDEO_IMX_MEDIA && VIDEO_DEV
+	select VIDEOBUF2_DMA_CONTIG
+	select V4L2_MEM2MEM_DEV
+	default y
+	---help---
+	  Use the IPU IC Post-processor on the i.MX5/6 SoC for mem2mem
+	  processing of buffers. Operations include scaling, rotation,
+	  and color space conversion.
+
 endmenu
 endif
