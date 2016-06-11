@@ -8,3 +8,4 @@ obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-ic.o
 obj-$(CONFIG_VIDEO_IMX_CAMERA) += imx-camif.o
 obj-$(CONFIG_VIDEO_IMX_CAMERA) += imx-csi.o
 obj-$(CONFIG_VIDEO_IMX_CAMERA) += imx-smfc.o
+obj-$(CONFIG_IMX_MIPI_CSI2) += imx-mipi-csi2.o

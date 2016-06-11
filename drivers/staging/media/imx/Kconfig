@@ -17,5 +17,13 @@ config VIDEO_IMX_CAMERA
 	---help---
 	  A video4linux camera interface driver for i.MX5/6 SOC.
 
+config IMX_MIPI_CSI2
+       tristate "MIPI CSI2 Receiver Driver"
+       depends on VIDEO_IMX_CAMERA
+       default y
+       ---help---
+         MIPI CSI-2 Receiver driver support. This driver is required
+	 for sensor drivers with a MIPI CSI2 interface.
+
 endmenu
 endif
