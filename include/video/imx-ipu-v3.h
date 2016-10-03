@@ -401,6 +401,8 @@ int ipu_rot_mode_to_degrees(int *degrees, enum ipu_rotate_mode mode,
 
 struct ipu_client_platformdata {
 	int csi;
+	int smfc;
+	int ic;
 	int di;
 	int dc;
 	int dp;

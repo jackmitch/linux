@@ -1158,17 +1158,64 @@ static struct ipu_platform_reg client_reg[] = {
 	{
 		.pdata = {
 			.csi = 0,
-			.dma[0] = IPUV3_CHANNEL_CSI0,
-			.dma[1] = -EINVAL,
+			.dma[0] = -EINVAL,
 		},
 		.name = "imx-ipuv3-csi",
 	}, {
 		.pdata = {
 			.csi = 1,
+			.dma[0] = -EINVAL,
+		},
+		.name = "imx-ipuv3-csi",
+	}, {
+		.pdata = {
+			.smfc = 0,
+			.dma[0] = IPUV3_CHANNEL_CSI0,
+			.dma[1] = -EINVAL,
+		},
+		.name = "imx-ipuv3-smfc",
+	}, {
+		.pdata = {
+			.smfc = 1,
 			.dma[0] = IPUV3_CHANNEL_CSI1,
 			.dma[1] = -EINVAL,
 		},
-		.name = "imx-ipuv3-csi",
+		.name = "imx-ipuv3-smfc",
+	}, {
+		.pdata = {
+			.ic = IC_TASK_ENCODER,
+			.dma[0] = IPUV3_CHANNEL_IC_PRP_ENC_MEM,
+			.dma[1] = -EINVAL,
+		},
+		.name = "imx-ipuv3-ic",
+	}, {
+		.pdata = {
+			.ic = IC_TASK_VIEWFINDER,
+			.dma[0] = IPUV3_CHANNEL_IC_PRP_VF_MEM,
+			.dma[1] = -EINVAL,
+		},
+		.name = "imx-ipuv3-ic",
+	}, {
+		.pdata = {
+			.ic = IC_TASK_POST_PROCESSOR,
+			.dma[0] = IPUV3_CHANNEL_IC_PP_MEM,
+			.dma[1] = -EINVAL,
+		},
+		.name = "imx-ipuv3-ic",
+	}, {
+		.pdata = {
+			.ic = IC_TASK_POST_PROCESSOR,
+			.dma[0] = IPUV3_CHANNEL_IC_PP_MEM,
+			.dma[1] = -EINVAL,
+		},
+		.name = "imx-ipuv3-ic",
+	}, {
+		.pdata = {
+			.ic = IC_TASK_POST_PROCESSOR,
+			.dma[0] = IPUV3_CHANNEL_IC_PP_MEM,
+			.dma[1] = -EINVAL,
+		},
+		.name = "imx-ipuv3-ic",
 	}, {
 		.pdata = {
 			.di = 0,
@@ -1196,6 +1243,7 @@ static int ipu_client_id;
 static int ipu_add_client_devices(struct ipu_soc *ipu, unsigned long ipu_base)
 {
 	struct device *dev = ipu->dev;
+	struct device_node *of_node = NULL;
 	unsigned i;
 	int id, ret;
 
@@ -1207,16 +1255,14 @@ static int ipu_add_client_devices(struct ipu_soc *ipu, unsigned long ipu_base)
 	for (i = 0; i < ARRAY_SIZE(client_reg); i++) {
 		struct ipu_platform_reg *reg = &client_reg[i];
 		struct platform_device *pdev;
-		struct device_node *of_node;
 
-		/* Associate subdevice with the corresponding port node */
-		of_node = of_graph_get_port_by_id(dev->of_node, i);
+		/* Associate subdevice with the corresponding child node */
+		of_node = of_get_next_child(dev->of_node, of_node);
 		if (!of_node) {
-			dev_info(dev,
-				 "no port@%d node in %s, not using %s%d\n",
-				 i, dev->of_node->full_name,
-				 (i / 2) ? "DI" : "CSI", i % 2);
-			continue;
+			dev_err(dev, "failed to get node for client %s\n",
+				reg->name);
+			ret = -ENODEV;
+			goto err_register;
 		}
 
 		pdev = platform_device_alloc(reg->name, id++);
