@@ -51,7 +51,7 @@
  * ENET will still work when enabling OV5642 capture, just not
  * quite as well.
  */
-/* #define __ENABLE_OV5642__ */
+#define __ENABLE_AR0135__
 
 / {
 	chosen {
@@ -231,16 +231,16 @@
 	};
 };
 
-#ifdef __ENABLE_OV5642__
+#ifdef __ENABLE_AR0135__
 &ipu1_csi0_from_ipu1_csi0_mux {
 	bus-width = <8>;
 	data-shift = <12>; /* Lines 19:12 used */
 	hsync-active = <1>;
-	vync-active = <1>;
+	vsync-active = <1>;
 };
 
 &ipu1_csi0_mux_from_parallel_sensor {
-	remote-endpoint = <&ov5642_to_ipu1_csi0_mux>;
+	remote-endpoint = <&ar0135_to_ipu1_csi0_mux>;
 };
 
 &ipu1_csi0 {
@@ -300,7 +300,7 @@
 	txd1-skew-ps = <0>;
 	txd2-skew-ps = <0>;
 	txd3-skew-ps = <0>;
-#ifndef __ENABLE_OV5642__
+#ifndef __ENABLE_AR0135__
 	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
 			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
 #endif
@@ -334,21 +334,21 @@
 	pinctrl-0 = <&pinctrl_i2c2>;
 	status = "okay";
 
-#ifdef __ENABLE_OV5642__
-	camera: ov5642@3c {
-		compatible = "ovti,ov5642";
+#ifdef __ENABLE_AR0135__
+	camera: ar0135@10 {
+		compatible = "onsemi,ar0135";
 		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl_ov5642>;
+		pinctrl-0 = <&pinctrl_ar0135>;
 		clocks = <&clks IMX6QDL_CLK_CKO2>;
 		clock-names = "xclk";
-		reg = <0x3c>;
+		reg = <0x10>;
 		xclk = <24000000>;
-		reset-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
-		pwdn-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+		pwdn-gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
 		gp-gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>;
 
 		port {
-			ov5642_to_ipu1_csi0_mux: endpoint {
+			ar0135_to_ipu1_csi0_mux: endpoint {
 				remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
 				bus-width = <8>;
 				hsync-active = <1>;
@@ -429,7 +429,7 @@
 				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
 				/* Phy reset */
 				MX6QDL_PAD_EIM_D23__GPIO3_IO23		0x000b0
-#ifndef __ENABLE_OV5642__
+#ifndef __ENABLE_AR0135__
 				MX6QDL_PAD_GPIO_6__ENET_IRQ		0x000b1
 #endif
 			>;
@@ -506,7 +506,7 @@
 			>;
 		};
 
-		pinctrl_ov5642: ov5642grp {
+		pinctrl_ar0135: ar0135grp {
 			fsl,pins = <
 				MX6QDL_PAD_SD1_DAT0__GPIO1_IO16 0x80000000
 				MX6QDL_PAD_GPIO_6__GPIO1_IO06   0x80000000
