@@ -75,6 +75,11 @@ static const struct imx_media_pixfmt imx_media_formats[] = {
 		.cs     = IPUV3_COLORSPACE_YUV,
 		.bpp    = 16,
 		.planar = true,
+	}, {
+               .fourcc = V4L2_PIX_FMT_GREY,
+               .cs     = IPUV3_COLORSPACE_UNKNOWN,
+               .bpp    = 8,
+               .codes  = {MEDIA_BUS_FMT_Y8_1X8},
 	},
 };
 
