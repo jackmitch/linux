@@ -203,7 +203,7 @@ static void imx_smfc_setup_channel(struct imx_smfc_priv *priv)
 	struct imx_media_dma_buf *buf0, *buf1;
 	unsigned int burst_size;
 	struct ipu_image image;
-	bool passthrough;
+	bool passthrough_word = false;
 
 	infmt = &priv->format_mbus[priv->input_pad];
 	outfmt = &priv->format_mbus[priv->output_pad];
@@ -223,16 +223,17 @@ static void imx_smfc_setup_channel(struct imx_smfc_priv *priv)
 
 	ipu_cpmem_set_burstsize(priv->smfc_ch, burst_size);
 
-	/*
-	 * If the sensor uses 16-bit parallel CSI bus, we must handle
-	 * the data internally in the IPU as 16-bit generic, aka
-	 * passthrough mode.
+	/* If the bus width is 16 bits or a non-planar based data format
+	 * we must enable passthrough mode (generic data mode)
 	 */
-	passthrough = (priv->sensor_mbus_cfg.type != V4L2_MBUS_CSI2 &&
-		       priv->sensor_ep->bus.parallel.bus_width >= 16);
 
-	if (passthrough)
+	if (infmt->code == MEDIA_BUS_FMT_Y8_1X8) {
+		ipu_cpmem_set_format_passthrough(priv->smfc_ch, 8);
+	} else if (priv->sensor_mbus_cfg.type != V4L2_MBUS_CSI2 &&
+		   priv->sensor_ep->bus.parallel.bus_width >= 16) {
 		ipu_cpmem_set_format_passthrough(priv->smfc_ch, 16);
+		passthrough_word = true;
+	}
 
 	/*
 	 * Set the channel for the direct CSI-->memory via SMFC
@@ -253,7 +254,7 @@ static void imx_smfc_setup_channel(struct imx_smfc_priv *priv)
 	ipu_idmac_lock_enable(priv->smfc_ch, 8);
 
 	burst_size = ipu_cpmem_get_burstsize(priv->smfc_ch);
-	burst_size = passthrough ?
+	burst_size = passthrough_word ?
 		(burst_size >> 3) - 1 : (burst_size >> 2) - 1;
 
 	ipu_smfc_set_burstsize(priv->smfc, burst_size);
